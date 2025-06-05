@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alimentos para Perros - Dog Shop</title>
+  <link rel="stylesheet" href="alimentos.css" />
+</head>
+<body>
+  <header>
+    <h1>🍖 Alimentos para Perros</h1>
+    <button id="verCarrito">Ver carrito (<span id="contador">0</span>)</button>
+  </header>
+
+  <main class="contenedor">
+    <div class="producto">
+      <img src="comida1.webp" alt="Croquetas premium">
+      <h3>Ricocan Cachorro Razas Medianas y Grandes (3 kg)</h3>
+      <p class="descripcion">Ricocan Cachorro Razas Medianas y Grandes (3 kg) es un alimento completo y balanceado, formulado especialmente para apoyar el crecimiento saludable de cachorros. Contiene proteínas de alta calidad, vitaminas y minerales esenciales para fortalecer sus defensas y desarrollar músculos y huesos fuertes.</p>
+      <p class="precio">S/ 28.60</p>
+      <button class="boton">Agregar al carrito</button>
+    </div>
+
+    <div class="producto">
+      <img src="comida2.webp" alt="Snacks saludables">
+      <h3>Bell’s Adultos (25kg)</h3>
+      <p class="descripcion">Bell’s Adultos (25 kg) es un alimento nutritivo y balanceado para perros adultos, diseñado para mantener su energía, vitalidad y salud digestiva. Enriquecido con vitaminas, minerales y proteínas de calidad para una dieta completa y económica.</p>
+      <p class="precio">S/ 99.90</p>
+      <button class="boton">Agregar al carrito</button>
+    </div>
+
+    <div class="producto">
+      <img src="comida3.webp" alt="Comida húmeda en lata">
+      <h3>Dog Chow Adulto Triple Proteína (2 kg)</h3>
+      <p class="descripcion">Dog Chow Adulto Triple Proteína (2 kg) ofrece una nutrición completa con una combinación de proteínas de pollo, carne y pescado. Ideal para mantener músculos fuertes, energía diaria y una digestión saludable en perros adultos.</p>
+      <p class="precio">S/ 30.90</p>
+      <button class="boton">Agregar al carrito</button>
+    </div>
+
+    <div class="producto">
+        <img src="comida4.webp" alt="Comida húmeda en lata">
+        <h3>Pet’s Fun Adultos con Cereales y Carne (15 kg)</h3>
+        <p class="descripcion">Pet’s Fun Adultos con Cereales y Carne (15 kg) es un alimento completo y sabroso, formulado para brindar energía y nutrición diaria a perros adultos. Contiene cereales, carne y nutrientes esenciales que contribuyen a una buena digestión, pelaje saludable y vitalidad.</p>
+        <p class="precio">S/ 79.90</p>
+        <button class="boton">Agregar al carrito</button>
+      </div>
+
+      <div class="producto">
+        <img src="comida5.png" alt="Comida húmeda en lata">
+        <h3>Naturalis Adultos (5 kg)</h3>
+        <p class="descripcion">Naturalis Adultos (5 kg) combina pollo, pavo y frutas naturales para brindar una alimentación equilibrada y sabrosa. Enriquecido con vitaminas, fibras y antioxidantes, ayuda a mantener una buena digestión, un pelaje brillante y una vida saludable en perros adultos.</p>
+        <p class="precio">S/ 55</p>
+        <button class="boton">Agregar al carrito</button>
+      </div>
+
+      <div class="producto">
+        <img src="comida6.jpg" alt="Comida húmeda en lata">
+        <h3>Hill’s Science Diet Adult (15 kg)</h3>
+        <p class="descripcion">Hill’s Science Diet Adult (15 kg) es un alimento premium formulado con ingredientes de alta calidad para perros adultos. Ayuda a mantener músculos fuertes, un sistema inmunológico saludable y una digestión óptima gracias a su mezcla balanceada de nutrientes, antioxidantes y fibras naturales.</p>
+        <p class="precio">S/ 350</p>
+        <button class="boton">Agregar al carrito</button>
+      </div>
+
+  </main>
+
+  <section id="carrito" class="oculto">
+    <h2>🛒 Carrito de Compras</h2>
+    <ul id="listaCarrito"></ul>
+    <p>Total: <span id="total">S/ 0.00</span></p>
+    <button onclick="vaciarCarrito()" class="boton-rojo">Vaciar carrito</button>
+  </section>
+
+  <footer>
+    <div class="contenedor">
+      <p>&copy; 2025 Dog Shop 🐶 - Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    const carrito = [];
+    const listaCarrito = document.getElementById('listaCarrito');
+    const total = document.getElementById('total');
+    const contador = document.getElementById('contador');
+    const carritoSection = document.getElementById('carrito');
+    const verCarritoBtn = document.getElementById('verCarrito');
+
+    document.querySelectorAll('.boton').forEach(boton => {
+      boton.addEventListener('click', () => {
+        const producto = boton.closest('.producto');
+        const nombre = producto.querySelector('h3').textContent;
+        const precio = parseFloat(producto.querySelector('.precio').textContent.replace('S/', '').trim());
+        agregarAlCarrito(nombre, precio);
+      });
+    });
+
+    verCarritoBtn.addEventListener('click', () => {
+      carritoSection.classList.toggle('oculto');
+    });
+
+    function agregarAlCarrito(nombre, precio) {
+      carrito.push({ nombre, precio });
+      actualizarCarrito();
+    }
+
+    function actualizarCarrito() {
+      listaCarrito.innerHTML = '';
+      let totalCompra = 0;
+
+      carrito.forEach((item, index) => {
+        totalCompra += item.precio;
+
+        const li = document.createElement('li');
+        li.innerHTML = `${item.nombre} - S/ ${item.precio.toFixed(2)} 
+          <button onclick="eliminarDelCarrito(${index})">❌</button>`;
+        listaCarrito.appendChild(li);
+      });
+
+      total.textContent = `S/ ${totalCompra.toFixed(2)}`;
+      contador.textContent = carrito.length;
+    }
+
+    function eliminarDelCarrito(index) {
+      carrito.splice(index, 1);
+      actualizarCarrito();
+    }
+
+    function vaciarCarrito() {
+      carrito.length = 0;
+      actualizarCarrito();
+    }
+  </script>
+</body>
+</html>

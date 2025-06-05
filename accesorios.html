@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alimentos para Perros - Dog Shop</title>
+  <link rel="stylesheet" href="alimentos.css" />
+</head>
+<body>
+  <header>
+    <h1>🐾 Accesorios para Perros</h1>
+    <button id="verCarrito">Ver carrito (<span id="contador">0</span>)</button>
+  </header>
+
+  <main class="contenedor">
+    <div class="producto">
+      <img src="COLLAR PARA HEMBRA.jpg" alt="Collar para perros">
+      <h3>Collar para hembra (todas las tallas)</h3>
+      <p class="descripcion">Collar elegante para perritas, ajustable y cómodo, con diseño femenino y seguro para paseos diarios. Ideal para razas pequeñas y medianas.</p>
+      <p class="precio">s/15</p>
+      <button class="boton">Agregar al carrito</button>
+    </div>
+
+    <div class="producto">
+      <img src="Collar para mascota personalizado.jpg" alt="Arnés para gatos">
+      <h3>Collar personalizado para perros (todas las tallas)</h3>
+      <p class="descripcion">Collar personalizado con nombre, ideal para perritas. Ajustable, cómodo y con placa grabada para mayor seguridad y estilo único.</p>
+      <p class="precio">s/25</p>
+      <button class="boton">Agregar al carrito</button>
+    </div>
+
+    <div class="producto">
+      <img src="cama para perro.webp" alt="cama para perros">
+      <h3>Cama nido estampado para mascota</h3>
+      <p class="descripcion">Cama suave y acolchada para perros, ideal para brindar descanso y confort. Material antideslizante, fácil de lavar y perfecta para cualquier rincón del hogar.</p>
+      <p class="precio">s/104</p>
+      <button class="boton">Agregar al carrito</button>
+    </div>
+
+    <div class="producto">
+        <img src="vestido para perrita.jpg" alt="ropa para perros">
+      <h3>Vestido para hembra (talla 1 - 4)</h3>
+      <p class="descripcion">Vestido adorable para perritas, con diseño cómodo y ligero. Perfecto para ocasiones especiales o paseos con estilo. Disponible en varias tallas y colores.</p>
+      <p class="precio">s/40</p>
+      <button class="boton">Agregar al carrito</button>
+    </div>
+
+      <div class="producto">
+        <img src="comedero portatil.avif" alt="Comedero portátil">
+        <h3>Comedero automático portátil para perros portátil</h3>
+        <p class="descripcion">Comedero automático portátil, ideal para alimentar a tu mascota cuando no estás en casa. Programa horarios y porciones fácilmente. Funciona con batería o USB y es perfecto para mantener la rutina alimenticia de tu perro o gato en cualquier lugar.</p>
+        <p class="precio">s/98.70</p>
+        <button class="boton">Agregar al carrito</button>
+      </div>
+
+      <div class="producto">
+        <img src="camisas de perro.jpg" alt="ropa para perros">
+        <h3>Camisas de perro pack de 4 (talla 1-4)</h3>
+        <p class="descripcion">Camisas cómodas y con estilo para perros, perfectas para paseos, fotos o días frescos. Confeccionadas en tela suave y transpirable, disponibles en varios colores y tallas.</p>
+        <p class="precio">s/50</p>
+        <button class="boton">Agregar al carrito</button>
+      </div>
+
+  </main>
+
+  <section id="carrito" class="oculto">
+    <h2>🛒 Carrito de Compras</h2>
+    <ul id="listaCarrito"></ul>
+    <p>Total: <span id="total">S/ 0.00</span></p>
+    <button onclick="vaciarCarrito()" class="boton-rojo">Vaciar carrito</button>
+  </section>
+
+  <footer>
+    <div class="contenedor">
+      <p>&copy; 2025 Dog Shop 🐶 - Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    const carrito = [];
+    const listaCarrito = document.getElementById('listaCarrito');
+    const total = document.getElementById('total');
+    const contador = document.getElementById('contador');
+    const carritoSection = document.getElementById('carrito');
+    const verCarritoBtn = document.getElementById('verCarrito');
+
+    document.querySelectorAll('.boton').forEach(boton => {
+      boton.addEventListener('click', () => {
+        const producto = boton.closest('.producto');
+        const nombre = producto.querySelector('h3').textContent;
+        const precio = parseFloat(producto.querySelector('.precio').textContent.replace('S/', '').trim());
+        agregarAlCarrito(nombre, precio);
+      });
+    });
+
+    verCarritoBtn.addEventListener('click', () => {
+      carritoSection.classList.toggle('oculto');
+    });
+
+    function agregarAlCarrito(nombre, precio) {
+      carrito.push({ nombre, precio });
+      actualizarCarrito();
+    }
+
+    function actualizarCarrito() {
+      listaCarrito.innerHTML = '';
+      let totalCompra = 0;
+
+      carrito.forEach((item, index) => {
+        totalCompra += item.precio;
+
+        const li = document.createElement('li');
+        li.innerHTML = `${item.nombre} - S/ ${item.precio.toFixed(2)} 
+          <button onclick="eliminarDelCarrito(${index})">❌</button>`;
+        listaCarrito.appendChild(li);
+      });
+
+      total.textContent = `S/ ${totalCompra.toFixed(2)}`;
+      contador.textContent = carrito.length;
+    }
+
+    function eliminarDelCarrito(index) {
+      carrito.splice(index, 1);
+      actualizarCarrito();
+    }
+
+    function vaciarCarrito() {
+      carrito.length = 0;
+      actualizarCarrito();
+    }
+  </script>
+</body>
+</html>

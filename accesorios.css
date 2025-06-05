@@ -1,0 +1,153 @@
+/* Estilo general */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background: #fefbf6;
+    color: #333;
+  }
+  
+  header {
+    background-color: #ff6f61;
+    color: white;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .contenedor {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 30px;
+  }
+  
+  /* Accesorio individual */
+  .accesorio {
+    background: #ff6f61;
+    border-radius: 12px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    width: 240px;
+    text-align: center;
+    padding: 20px;
+    transition: transform 0.3s;
+  }
+  
+  .accesorio:hover {
+    transform: scale(1.03);
+  }
+  
+  .accesorio img {
+    width: 100%;
+    border-radius: 8px;
+  }
+  
+  .accesorio h3 {
+    margin: 15px 0 5px;
+  }
+  
+  .descripcion {
+    font-size: 0.95em;
+    color: #fefbf6;
+    margin: 10px 0;
+  }
+  
+  .precio {
+    font-size: 1.1em;
+    color: #000000;
+    font-weight: bold;
+    margin: 10px 0;
+  }
+  
+  /* Botón */
+  .boton {
+    display: inline-block;
+    background-color: #fff;
+    color: #000000;
+    padding: 10px 15px;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+  
+  .boton:hover {
+    background-color: #55a164;
+  }
+  
+  /* Footer */
+  footer {
+    background-color: #ff6f61;
+    color: #000000;
+    text-align: center;
+    padding: 15px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 600px) {
+    .contenedor {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  
+
+
+
+
+
+  #carrito {
+    background: #fff;
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 600px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: left;
+  }
+  
+  #carrito h2 {
+    color: #ff9800;
+    margin-bottom: 10px;
+  }
+  
+  #carrito ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 10px;
+  }
+  
+  #carrito li {
+    background: #fdf1e7;
+    margin: 5px 0;
+    padding: 8px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  #verCarrito {
+    background: #fff3e0;
+    color: #e65100;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  .boton-rojo {
+    background: #e53935;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .boton-rojo:hover {
+    background: #c62828;
+  }
+  
+  .oculto {
+    display: none;
+  }

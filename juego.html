@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>🐶 Perri Aventuras - ¡El Juego Más Bonito! 🐕</title>
+<link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Colores base para una paleta más bonita */
+    --color-sky-light: #f98f8f;
+    --color-sky-dark: #f98f8f;
+    --color-ground-light: #829ff5;
+    --color-ground-dark: #47419b;
+    --color-grass-green: #7be276;
+    --color-dark-green: #529a52;
+    --color-brown-platform: #e8f582; /* Un marrón más bonito para las plataformas */
+    --color-border-green: #000;
+  }
+
+  body {
+    margin: 0;
+    /* Degradado de cielo con más detalle */
+    background: linear-gradient(to bottom, var(--color-sky-light) 0%, var(--color-sky-dark) 100%);
+    font-family: 'Bubblegum Sans', cursive, sans-serif; /* Fuente personalizada */
+    overflow: hidden;
+    user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
+  }
+
+  /* Estilo para la pantalla de selección de personaje */
+  #characterSelect {
+    text-align: center;
+    padding: 30px;
+    /* Se eliminarán las imágenes de fondo aquí para usar solo color */
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: white;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.5); /* Sombra interna y externa */
+    border-radius: 20px; /* Bordes más redondeados para la pantalla de inicio */
+    border: 5px solid var(--color-border-green);
+    position: relative;
+    overflow: hidden;
+    /* Viñeta para el efecto de bosque (opcional, puedes quitarlo si quieres un diseño más plano) */
+    -webkit-mask-image: radial-gradient(circle at center, white 80%, transparent 100%);
+    mask-image: radial-gradient(circle at center, white 80%, transparent 100%);
+  }
+
+  #characterSelect::before {
+    content: '';
+    position: absolute;
+    top: -20px; left: -20px; right: -20px; bottom: -20px;
+    background: rgba(0,0,0,0.1); /* Ligera oscuridad en los bordes */
+    border-radius: 25px;
+    z-index: -1;
+  }
+
+  #characterSelect .content-wrapper {
+    background: rgba(255, 255, 255, 0.7); /* Más transparente para que se vea el fondo */
+    backdrop-filter: blur(5px); /* Efecto de desenfoque detrás del contenedor */
+    -webkit-backdrop-filter: blur(5px);
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    color: var(--color-dark-green); /* Texto en verde oscuro */
+    max-width: 900px; /* Aumentado para acomodar botones horizontales */
+    margin: 0 auto;
+    display: flex; /* Flexbox para el contenido */
+    flex-direction: column; /* Organizar en columna principal */
+    align-items: center; /* Centrar elementos */
+  }
+
+  #characterSelect h1 {
+    font-size: 3.5em; /* Título más grande */
+    margin-bottom: 25px;
+    text-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+    color: #4a2a1a; /* Color de texto más cálido */
+    -webkit-text-stroke: 2px #3b7d3b; /* Contorno verde oscuro */
+    color: #ffeeaa; /* Relleno amarillo dorado */
+  }
+  #characterSelect div {
+    font-size: 1.8em; /* Descripción más grande */
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    color: #5a3a2a;
+  }
+
+  /* Contenedor de botones para disposición horizontal */
+  #characterSelect .button-container {
+    display: flex; /* Usar flexbox para los botones */
+    justify-content: center; /* Centrar los botones */
+    flex-wrap: wrap; /* Permitir que los botones se envuelvan en pantallas pequeñas */
+    gap: 30px; /* Espacio entre los botones */
+  }
+
+  #characterSelect button {
+    padding: 18px 35px; /* Más padding */
+    font-size: 24px; /* Tamaño de fuente mayor */
+    border-radius: 20px; /* Bordes aún más redondeados */
+    border: none; /* Quitamos el borde sólido */
+    cursor: pointer;
+    /* Degradado para los botones con brillo interno */
+    background: linear-gradient(to bottom, #ffeeaa, #ffdd77); /* Amarillo dorado */
+    color: #4a2a1a; /* Texto marrón oscuro */
+    box-shadow: 0 8px 15px rgba(0,0,0,0.3); /* Sombra más pronunciada */
+    transition: all 0.3s ease; /* Transición suave */
+    display: inline-flex;
+    align-items: center;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.4); /* Sombra de texto clara */
+
+    /* Borde de imagen para un efecto más natural (requiere una imagen de borde) */
+    border-style: solid;
+    border-width: 8px;
+    border-image: url('https://i.imgur.com/uR2i1F7.png') 8 / 8px stretch; /* Imagen de borde (ejemplo) */
+    -webkit-mask: -webkit-gradient(linear, left top, left bottom, from(transparent), to(transparent)), url('https://i.imgur.com/uR2i1F7.png');
+    mask: url('https://i.imgur.com/uR2i1F7.png');
+    mask-size: 100% 100%;
+  }
+  /* Estilo de hover y active para los botones */
+  #characterSelect button:hover {
+    background: linear-gradient(to bottom, #ffdd77, #ffeeaa); /* Invertir degradado al hover */
+    color: #2a1a0a;
+    transform: translateY(-5px) scale(1.05); /* Efecto de elevación y pequeño escalado */
+    box-shadow: 0 12px 20px rgba(0,0,0,0.4);
+    filter: brightness(1.1); /* Ligeramente más brillante */
+  }
+  #characterSelect button:active {
+    transform: translateY(-2px); /* Efecto de "presionado" */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  #characterSelect img {
+    height: 60px; /* Imágenes más grandes */
+    width: 60px;
+    margin-right: 15px;
+    border-radius: 50%; /* Bordes redondos para las imágenes */
+    border: 3px solid rgba(255,255,255,0.8); /* Borde blanco alrededor del perrito */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+
+  /* Panel de puntaje y nivel */
+  #scoreLevel {
+    color: white;
+    font-size: 30px; /* Texto más grande */
+    text-align: center;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.5); /* Sombra de texto más intensa */
+    display: none;
+    background: linear-gradient(to bottom, rgba(59, 125, 59, 0.9), rgba(42, 106, 42, 0.9)); /* Degradado semitransparente */
+    padding: 12px 25px;
+    border-radius: 15px; /* Bordes más redondeados */
+    border: 3px solid var(--color-border-green);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    position: absolute; /* Posicionamiento absoluto para flotar */
+    top: 20px; /* Más abajo del borde superior */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    font-weight: bold;
+    letter-spacing: 1px; /* Espaciado entre letras */
+  }
+  #scoreLevel span {
+    display: inline-block; /* Para aplicar margen individual */
+    margin: 0 15px;
+  }
+  #scoreLevel span::before {
+    margin-right: 8px; /* Espacio entre icono y texto */
+  }
+  #levelSpan::before { content: '⭐'; } /* Icono de estrella para nivel */
+  #scoreSpan::before { content: '💰'; } /* Icono de moneda para puntaje */
+
+
+  /* Área de juego (Canvas) */
+  canvas {
+    display: block;
+    background: linear-gradient(to bottom, var(--color-ground-light), var(--color-ground-dark)); /* Degradado para el suelo del juego */
+    border: 8px solid var(--color-border-green); /* Borde más grueso */
+    box-shadow: 0 0 40px rgba(46, 139, 87, 0.8); /* Sombra aún más difuminada y pronunciada */
+    border-radius: 12px; /* Bordes redondeados */
+    position: relative; /* Necesario para posicionar la pantalla de game over */
+  }
+
+  /* Pantalla de Game Over superpuesta */
+  #gameOverScreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8); /* Fondo más oscuro para Game Over */
+    color: white;
+    font-family: 'Bubblegum Sans', cursive, sans-serif;
+    font-size: 60px; /* Texto más grande */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    text-shadow: 5px 5px 10px rgba(0,0,0,0.7); /* Sombra de texto más fuerte */
+    cursor: pointer;
+    z-index: 20;
+    border-radius: 12px; /* Bordes redondeados para coincidir con el canvas */
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  #gameOverScreen h2 {
+    margin-bottom: 25px;
+    font-size: 1.5em; /* Título principal */
+    letter-spacing: 2px;
+  }
+  #gameOverScreen p {
+    font-size: 0.9em; /* Texto de reinicio */
+    opacity: 0.8;
+  }
+</style>
+</head>
+<body>
+
+<div id="characterSelect">
+  <div class="content-wrapper">
+    <h1 id="startTitle">¡Perri Aventuras!</h1>
+    <div id="startDescription">Elige a tu compañero peludo y salta a la acción.</div>
+    <div class="button-container">
+      <button onclick="startGame('pug')">
+        <img src="juegobay.jpg" alt="Pug" />
+        🐶 Pug
+      </button>
+      <button onclick="startGame('shih_tzu')">
+        <img src="juegorocky.jpg" alt="Shih Tzu" />
+        🐾 Shih Tzu
+      </button>
+      <button onclick="startGame('french_bulldog')">
+        <img src="juegobull.webp" alt="Bulldog Frances" />
+        🦴 Bulldog Francés
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="scoreLevel">
+  <span id="levelSpan">Nivel: 1</span> | <span id="scoreSpan">Puntaje: 0</span>
+</div>
+
+<canvas id="gameCanvas" width="800" height="400" style="display:none;"></canvas>
+
+<div id="gameOverScreen" style="display:none;">
+  <h2 id="gameOverTitle">¡Fin de la Aventura!</h2>
+  <p id="gameOverDescription">Haz clic para intentarlo de nuevo</p>
+</div>
+
+<audio id="bgMusic" loop>
+  <source src="wwd.mp3juice.blog - Laurent Lombard - Exotico Speedo (192 KBps).mp3" type="audio/mpeg" />
+</audio>
+
+
+<img id="character" src="" alt="Personaje" />
+
+
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const scoreSpan = document.getElementById('scoreSpan');
+const levelSpan = document.getElementById('levelSpan');
+const characterSelect = document.getElementById('characterSelect');
+const startTitle = document.getElementById('startTitle');
+const startDescription = document.getElementById('startDescription');
+const scoreLevelDiv = document.getElementById('scoreLevel');
+const bgMusic = document.getElementById('bgMusic');
+const gameOverScreen = document.getElementById('gameOverScreen');
+const gameOverTitle = document.getElementById('gameOverTitle');
+const gameOverDescription = document.getElementById('gameOverDescription');
+
+
+let keys = {};
+let gameOver = false;
+let score = 0;
+let level = 1;
+let cameraX = 0;
+
+const GRAVITY = 0.8;
+
+const images = {
+
+
+
+
+
+  pug: {
+    run: 'file:///C:/Users/51977/Documents/dise%C3%B1o%20web/juegobay.jpg',
+    cry: 'file:///C:/Users/51977/Documents/dise%C3%B1o%20web/cry1.jpg'
+  },
+  shih_tzu: {
+    run: 'file:///C:/Users/51977/Documents/dise%C3%B1o%20web/juegorocky.jpg',
+    cry: 'file:///C:/Users/51977/Documents/dise%C3%B1o%20web/cry2.jpg'
+  },
+  french_bulldog: {
+    run: 'file:///C:/Users/51977/Documents/dise%C3%B1o%20web/juegobull.webp',
+    cry: 'file:///C:/Users/51977/Documents/dise%C3%B1o%20web/cry3.jpg'
+  },
+  enemy: 'file:///C:/Users/51977/Documents/dise%C3%B1o%20web/gatojuego.jpg',
+  coin: 'file:///C:/Users/51977/Documents/dise%C3%B1o%20web/juego%20comida.avif',
+  door: 'file:///C:/Users/51977/Documents/dise%C3%B1o%20web/juego%20casa.jpg'
+};
+
+let player = {
+  x: 100,
+  y: 0,
+  width: 48,
+  height: 48,
+  vx: 0,
+  vy: 0,
+  speed: 5,
+  jumping: false,
+  direction: 'right',
+  character: 'pug',
+  imgRun: new Image(),
+  imgCry: new Image(),
+  crying: false,
+};
+
+let platforms = [];
+let coins = [];
+let enemies = [];
+let door = {x: 0, y: 0, width: 48, height: 48};
+
+// --- Sistema de Semilla Aleatoria ---
+let currentSeed = 0;
+function mulberry32(a) {
+    return function() {
+      var t = a += 0x6D2B79F5;
+      t = Math.imul(t ^ t >>> 15, t | 1);
+      t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    }
+}
+let random = mulberry32(Date.now());
+
+function setRandomSeed(seed) {
+    currentSeed = seed;
+    random = mulberry32(seed);
+}
+// --- Fin Sistema de Semilla Aleatoria ---
+
+// --- Temas para las pantallas de inicio y Game Over (solo con degradados de color) ---
+const startEndScreenThemes = [
+    {
+        background: 'linear-gradient(to bottom right, #f6d365 0%, #fda085 100%)', // Atardecer cálido
+        startTitle: '¡Perri Aventuras!',
+        startDescription: 'Elige a tu compañero peludo y salta a la acción.',
+        gameOverTitle: '¡Fin de la Aventura!',
+        gameOverDescription: 'Haz clic para intentarlo de nuevo'
+    },
+    {
+        background: 'linear-gradient(to top left, #a1c4fd 0%, #c2e9fb 100%)', // Cielo azul claro
+        startTitle: '¡Hora de Jugar!',
+        startDescription: 'Selecciona tu perrito y explora el mundo.',
+        gameOverTitle: '¡A Pesar de Todo!',
+        gameOverDescription: 'Reintentar y superar'
+    },
+    {
+        background: 'linear-gradient(to bottom, #d4fc79 0%, #96e6a1 100%)', // Verde pradera
+        startTitle: '¡Comienza la Diversión!',
+        startDescription: 'Tu fiel amigo te espera para una nueva misión.',
+        gameOverTitle: '¡No Te Rindas!',
+        gameOverDescription: 'Un nuevo intento te espera'
+    },
+    {
+        background: 'linear-gradient(to top right, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)', // Rosa pastel
+        startTitle: '¡Bienvenido Perruno!',
+        startDescription: 'Aventuras emocionantes te esperan, elige bien.',
+        gameOverTitle: '¡Vuelve a Intentarlo!',
+        gameOverDescription: 'La diversión no termina aquí'
+    },
+    {
+        background: 'linear-gradient(to bottom left, #84fab0 0%, #8fd3f4 100%)', // Agua fresca
+        startTitle: '¡Explora y Descubre!',
+        startDescription: 'Cada partida es una nueva historia para tu perrito.',
+        gameOverTitle: '¡Perdiste el Camino!',
+        gameOverDescription: 'Retoma la aventura'
+    }
+];
+
+function applyRandomTheme() {
+    const randomTheme = startEndScreenThemes[Math.floor(Math.random() * startEndScreenThemes.length)];
+
+    characterSelect.style.backgroundImage = randomTheme.background;
+    gameOverScreen.style.backgroundImage = randomTheme.background;
+
+    startTitle.textContent = randomTheme.startTitle;
+    startDescription.textContent = randomTheme.startDescription;
+    gameOverTitle.textContent = randomTheme.gameOverTitle;
+    gameOverDescription.textContent = randomTheme.gameOverDescription;
+}
+// --- Fin Temas ---
+
+
+function generateLevel(currentLevel) {
+    platforms = [];
+    coins = [];
+    enemies = [];
+    player.x = 100;
+    player.y = 0;
+    player.vx = 0;
+    player.vy = 0;
+    cameraX = 0;
+
+    platforms.push({ x: 0, y: 350, width: 800 + (currentLevel * 100), height: 50 });
+
+    let lastPlatformX = platforms[0].x + platforms[0].width;
+    let platformCount = 5 + currentLevel * 2;
+
+    for (let i = 0; i < platformCount; i++) {
+        let platformWidth = 150 + random() * 100 + (currentLevel * 10);
+        let platformGap = 150 + random() * 100;
+        let platformHeight = 20 + random() * 20;
+        let platformY = 250 + random() * 80;
+
+        if (platformY + platformHeight > canvas.height - 50) platformY = canvas.height - 50 - platformHeight;
+        if (platformY < 100) platformY = 100;
+
+        platforms.push({
+            x: lastPlatformX + platformGap,
+            y: platformY,
+            width: platformWidth,
+            height: platformHeight
+        });
+        lastPlatformX += platformGap + platformWidth;
+    }
+
+    const coinDensity = 3 + Math.floor(currentLevel / 2);
+    platforms.forEach(p => {
+        for (let i = 0; i < coinDensity; i++) {
+            if (random() < 0.5) {
+                coins.push({
+                    x: p.x + random() * p.width,
+                    y: p.y - 40 - random() * 50,
+                    width: 24,
+                    height: 24,
+                    collected: false
+                });
+            }
+        }
+    });
+
+    const enemyCount = Math.max(currentLevel, 2);
+    for (let i = 0; i < enemyCount; i++) {
+        let enemyX = lastPlatformX / (enemyCount + 1) * (i + 1) + random() * 100;
+        let enemyY = 320;
+
+        let platformFound = platforms.find(p => enemyX > p.x && enemyX < p.x + p.width);
+        if (platformFound) {
+            enemyY = platformFound.y - 48;
+        }
+
+        let speed = 2 + currentLevel * 0.8;
+        let rangeWidth = 200 + currentLevel * 50;
+
+        enemies.push({
+            x: enemyX,
+            y: enemyY,
+            width: 48,
+            height: 48,
+            vx: speed * (random() < 0.5 ? 1 : -1),
+            range: [enemyX - rangeWidth / 2, enemyX + rangeWidth / 2],
+            type: 'walking'
+        });
+    }
+
+    if (currentLevel >= 3) {
+        const fallingEnemyCount = Math.floor((currentLevel - 2) / 2) + 1;
+        for (let i = 0; i < fallingEnemyCount; i++) {
+            enemies.push({
+                x: (cameraX + random() * canvas.width) + (random() * 200),
+                y: -100 - random() * 200,
+                width: 48,
+                height: 48,
+                vx: 0,
+                vy: 5 + currentLevel * 0.7,
+                type: 'falling'
+            });
+        }
+    }
+
+    door.x = lastPlatformX + 200 + currentLevel * 100;
+    door.y = 200;
+}
+
+function rectsCollide(a, b) {
+  return a.x < b.x + b.width &&
+         a.x + a.width > b.x &&
+         a.y < b.y + b.height &&
+         a.y + a.height > b.y;
+}
+
+function updateScoreLevel() {
+  scoreSpan.textContent = "Puntaje: " + score;
+  levelSpan.textContent = "Nivel: " + level;
+}
+
+function drawRect(x, y, w, h, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x - cameraX, y, w, h);
+}
+
+function drawPlatforms() {
+  platforms.forEach(p => drawRect(p.x, p.y, p.width, p.height, 'var(--color-brown-platform)'));
+}
+
+function drawCoins() {
+  coins.forEach(c => {
+    if (!c.collected) {
+      ctx.drawImage(coinImg, c.x - cameraX, c.y, c.width, c.height);
+    }
+  });
+}
+
+function drawEnemies() {
+  enemies.forEach(e => {
+    ctx.drawImage(enemyImg, e.x - cameraX, e.y, e.width, e.height);
+  });
+}
+
+function drawDoor() {
+  ctx.drawImage(doorImg, door.x - cameraX, door.y, door.width, door.height);
+}
+
+function drawPlayer() {
+  if (player.crying) {
+    ctx.drawImage(player.imgCry, player.x - cameraX, player.y, player.width, player.height);
+  } else {
+    ctx.drawImage(player.imgRun, player.x - cameraX, player.y, player.width, player.height);
+  }
+}
+
+function update() {
+  if (gameOver) return;
+
+  if (keys['arrowleft'] || keys['a']) {
+    player.vx = -player.speed;
+    player.direction = 'left';
+  } else if (keys['arrowright'] || keys['d']) {
+    player.vx = player.speed;
+    player.direction = 'right';
+  } else {
+    player.vx = 0;
+  }
+
+  if ((keys['arrowup'] || keys['w'] || keys[' ']) && !player.jumping) {
+    player.vy = -15;
+    player.jumping = true;
+  }
+
+  player.vy += GRAVITY;
+
+  let newX = player.x + player.vx;
+  let newY = player.y + player.vy;
+
+  let onPlatform = false;
+  platforms.forEach(p => {
+    if (newX + player.width > p.x &&
+        newX < p.x + p.width &&
+        player.y + player.height <= p.y &&
+        newY + player.height >= p.y) {
+      newY = p.y - player.height;
+      player.vy = 0;
+      player.jumping = false;
+      onPlatform = true;
+    }
+    else if (rectsCollide({x: newX, y: newY, width: player.width, height: player.height}, p)) {
+        if (player.vx > 0 && player.x + player.width <= p.x) {
+            newX = p.x - player.width;
+        } else if (player.vx < 0 && player.x >= p.x + p.width) {
+            newX = p.x + p.width;
+        }
+        if (player.vy < 0 && player.y >= p.y + p.height) {
+            newY = p.y + p.height;
+            player.vy = 0;
+        }
+    }
+  });
+
+  if (!onPlatform && newY + player.height < canvas.height) {
+    player.jumping = true;
+  }
+
+  if (newY + player.height > canvas.height) {
+    newY = canvas.height - player.height;
+    player.vy = 0;
+    player.jumping = false;
+  }
+
+  player.x = newX;
+  player.y = newY;
+
+  enemies.forEach(e => {
+    if (e.type === 'walking') {
+        e.x += e.vx;
+        if (e.x < e.range[0] || e.x + e.width > e.range[1]) {
+            e.vx *= -1;
+        }
+    } else if (e.type === 'falling') {
+        e.y += e.vy;
+        if (e.y > canvas.height) {
+            e.y = -100 - random() * 200;
+            e.x = cameraX + random() * canvas.width;
+        }
+    }
+  });
+
+  coins.forEach(c => {
+    if (!c.collected && rectsCollide(player, c)) {
+      c.collected = true;
+      score += 5;
+      updateScoreLevel();
+    }
+  });
+
+  for (let e of enemies) {
+    if (rectsCollide(player, e)) {
+      gameOver = true;
+      player.crying = true;
+      bgMusic.pause();
+      break;
+    }
+  }
+
+  if (rectsCollide(player, door)) {
+    level++;
+    score += 25;
+    updateScoreLevel();
+    generateLevel(level);
+  }
+
+  cameraX = player.x - 150;
+  if (cameraX < 0) cameraX = 0;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawPlatforms();
+  drawCoins();
+  drawEnemies();
+  drawDoor();
+  drawPlayer();
+
+  if (gameOver) {
+    // No se dibuja aquí, se controla con el div de Game Over
+  }
+}
+
+function gameLoop() {
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
+
+let enemyImg = new Image();
+let coinImg = new Image();
+let doorImg = new Image();
+
+function loadPlayerImages(character, callback) {
+  player.character = character;
+  player.imgRun = new Image();
+  player.imgCry = new Image();
+  let count = 0;
+  function checkDone() {
+    count++;
+    if (count === 2) callback();
+  }
+
+  player.imgRun.onload = checkDone;
+  player.imgCry.onload = checkDone;
+
+  player.imgRun.onerror = () => {
+    console.warn('Error cargando imagen de correr');
+    checkDone();
+  };
+  player.imgCry.onerror = () => {
+    console.warn('Error cargando imagen de llorar');
+    checkDone();
+  };
+
+  player.imgRun.src = images[character].run;
+  player.imgCry.src = images[character].cry;
+}
+
+function startGame(character) {
+  loadPlayerImages(character, () => {
+    score = 0;
+    level = 1;
+    gameOver = false;
+    player.crying = false;
+    player.vx = 0;
+    player.vy = 0;
+
+    applyRandomTheme();
+
+    setRandomSeed(Date.now());
+
+    characterSelect.style.display = 'none';
+    scoreLevelDiv.style.display = 'block';
+    canvas.style.display = 'block';
+
+
+    generateLevel(level);
+    updateScoreLevel();
+
+    bgMusic.play();
+
+    if (!gameStarted) {
+      gameStarted = true;
+      gameLoop();
+    }
+  });
+}
+
+enemyImg.src = images.enemy;
+coinImg.src = images.coin;
+doorImg.src = images.door;
+
+window.addEventListener('keydown', e => { keys[e.key.toLowerCase()] = true; });
+window.addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
+
+gameOverScreen.addEventListener('click', () => {
+  if (gameOver) {
+    startGame(player.character);
+    bgMusic.play();
+  }
+});
+
+let gameStarted = false;
+
+Object.defineProperty(window, 'gameOver', {
+    set: function(value) {
+        if (value === true) {
+            applyRandomTheme();
+            gameOverScreen.style.display = 'flex';
+            canvas.style.pointerEvents = 'none';
+        } else {
+            gameOverScreen.style.display = 'none';
+            canvas.style.pointerEvents = 'auto';
+        }
+        this._gameOver = value;
+    },
+    get: function() {
+        return this._gameOver;
+    }
+});
+window._gameOver = false;
+
+canvas.style.pointerEvents = 'none';
+
+document.addEventListener('DOMContentLoaded', applyRandomTheme);
+
+</script>
+
+</body>
+</html>
